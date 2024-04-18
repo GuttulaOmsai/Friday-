@@ -3,60 +3,63 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Telugu Speaking Assistant</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-    }
-
-    .container {
-      max-width: 600px;
-      margin: 50px auto;
-      text-align: center;
-    }
-
-    button {
-      padding: 10px 20px;
-      background-color: #007bff;
-      color: #fff;
-      border: none;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background-color: #0056b3;
-    }
-  </style>
+  <title>Google Cloud Text-to-Speech</title>
 </head>
 <body>
-  <div class="container">
-    <h1>Telugu Speaking Assistant</h1>
-    <button id="startButton">Start Listening</button>
-    <p id="output"></p>
-  </div>
-
+  <button onclick="synthesizeSpeech()">Synthesize Speech</button>
+  
   <script>
-    const recognition = new webkitSpeechRecognition(); // Initialize speech recognition
-    recognition.lang = "te-IN"; // Set language to Telugu (India)
+    function synthesizeSpeech() {
+      const text = "నా పేరు ఫ్రైడే, బాస్"; // Your text in Telugu
+      const accessToken = "YOUR_ACCESS_TOKEN"; // Your Google Cloud access token
 
-    document.getElementById("startButton").onclick = function() {
-      recognition.start(); // Start speech recognition when button is clicked
-    };
+      const url = `https://texttospeech.googleapis.com/v1/text:synthesize?key=${accessToken}`;
+      const data = {
+        "input": {
+          "text": text
+        },
+        "voice": {
+          "languageCode": "te-IN",
+          "name": "te-IN-Wavenet-C",
+          "ssmlGender": "FEMALE"
+        },
+        "audioConfig": {
+          "audioEncoding": "MP3"
+        }
+      };
 
-    recognition.onresult = function(event) {
-      const result = event.results[0][0].transcript; // Get the recognized speech
-      document.getElementById("output").innerText = "You said: " + result; // Display the recognized speech
+      fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+      })
+      .then(response => response.json())
+      .then(data => {
+        const audioContent = data.audioContent;
+        const audioBlob = base64toBlob(audioContent, "audio/mp3");
+        const audioUrl = URL.createObjectURL(audioBlob);
+        const audioElement = new Audio(audioUrl);
+        audioElement.play();
+      })
+      .catch(error => console.error("Error:", error));
+    }
 
-      // Check if recognized speech matches a command
-      if (result.includes("నీ పేరు ఏమిటి")) {
-        speak("నా పేరు ఫ్రైడే, బాస్");
+    function base64toBlob(base64Data, contentType) {
+      const byteCharacters = atob(base64Data);
+      const byteArrays = [];
+      for (let offset = 0; offset < byteCharacters.length; offset += 1024) {
+        const slice = byteCharacters.slice(offset, offset + 1024);
+        const byteNumbers = new Array(slice.length);
+        for (let i = 0; i < slice.length; i++) {
+          byteNumbers[i] = slice.charCodeAt(i);
+        }
+        const byteArray = new Uint8Array(byteNumbers);
+        byteArrays.push(byteArray);
       }
-    };
-
-    function speak(text) {
-      const utterance = new SpeechSynthesisUtterance(text); // Initialize speech synthesis
-      utterance.lang = "te-IN"; // Set language to Telugu (India)
-      window.speechSynthesis.speak(utterance); // Speak the provided text
+      const blob = new Blob(byteArrays, { type: contentType });
+      return blob;
     }
   </script>
 </body>
