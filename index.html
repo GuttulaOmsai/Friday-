@@ -3,64 +3,46 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Google Cloud Text-to-Speech</title>
+  <title>Face Authentication</title>
+  <style>
+    #container {
+      position: relative;
+    }
+
+    #video, #canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    #greetingMessage {
+      font-size: 24px;
+      margin-top: 10px;
+    }
+  </style>
 </head>
 <body>
-  <button onclick="synthesizeSpeech()">Synthesize Speech</button>
-  
+  <div id="container">
+    <video id="video" width="640" height="480" autoplay></video>
+    <canvas id="canvas" width="640" height="480"></canvas>
+    <button id="startButton">Start Authentication</button>
+    <div id="greetingMessage"></div>
+  </div>
+
   <script>
-    function synthesizeSpeech() {
-      const text = "నా పేరు ఫ్రైడే, బాస్"; // Your text in Telugu
-      const accessToken = "YOUR_ACCESS_TOKEN"; // Your Google Cloud access token
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const startButton = document.getElementById('startButton');
+    const greetingMessage = document.getElementById('greetingMessage');
 
-      const url = `https://texttospeech.googleapis.com/v1/text:synthesize?key=${accessToken}`;
-      const data = {
-        "input": {
-          "text": text
-        },
-        "voice": {
-          "languageCode": "te-IN",
-          "name": "te-IN-Wavenet-C",
-          "ssmlGender": "FEMALE"
-        },
-        "audioConfig": {
-          "audioEncoding": "MP3"
-        }
-      };
-
-      fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(data)
-      })
-      .then(response => response.json())
-      .then(data => {
-        const audioContent = data.audioContent;
-        const audioBlob = base64toBlob(audioContent, "audio/mp3");
-        const audioUrl = URL.createObjectURL(audioBlob);
-        const audioElement = new Audio(audioUrl);
-        audioElement.play();
-      })
-      .catch(error => console.error("Error:", error));
+    // Use Face API to detect faces
+    const startAuthentication = () => {
+      // Code to start face detection and authentication
+      // Once authentication is successful, display greeting message
+      greetingMessage.textContent = 'Hello, good evening sir. My name is Friday, your personal assistant. What can I do for you, sir?';
     }
 
-    function base64toBlob(base64Data, contentType) {
-      const byteCharacters = atob(base64Data);
-      const byteArrays = [];
-      for (let offset = 0; offset < byteCharacters.length; offset += 1024) {
-        const slice = byteCharacters.slice(offset, offset + 1024);
-        const byteNumbers = new Array(slice.length);
-        for (let i = 0; i < slice.length; i++) {
-          byteNumbers[i] = slice.charCodeAt(i);
-        }
-        const byteArray = new Uint8Array(byteNumbers);
-        byteArrays.push(byteArray);
-      }
-      const blob = new Blob(byteArrays, { type: contentType });
-      return blob;
-    }
+    startButton.addEventListener('click', startAuthentication);
   </script>
 </body>
 </html>
