@@ -35,9 +35,20 @@
     const startButton = document.getElementById('startButton');
     const greetingMessage = document.getElementById('greetingMessage');
 
-    // Use Face API to detect faces
+    // Function to start face authentication
     const startAuthentication = () => {
-      // Code to start face detection and authentication
+      // Access the user's webcam
+      navigator.mediaDevices.getUserMedia({ video: {} })
+        .then((stream) => {
+          video.srcObject = stream;
+        })
+        .catch((error) => {
+          console.error('Error accessing webcam:', error);
+        });
+
+      // Implement face detection and recognition logic here
+      // You can use libraries like Face API.js or a custom ML model
+
       // Once authentication is successful, display greeting message
       greetingMessage.textContent = 'Hello, good evening sir. My name is Friday, your personal assistant. What can I do for you, sir?';
     }
