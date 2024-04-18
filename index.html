@@ -24,7 +24,7 @@
 </head>
 <body>
   <div id="container">
-    <button id="startButton">Start Authentication</button>
+    <button id="startButton">ప్రారంభించు ధ్వని ధ్వారా ధ్వనితా</button>
     <div id="greetingMessage"></div>
   </div>
 
@@ -46,12 +46,12 @@
         const voiceInput = event.results[0][0].transcript.toLowerCase(); // Convert input to lowercase for case-insensitive comparison
         
         // Compare voice input with authorized phrase
-        if (voiceInput.includes('hello')) {
+        if (voiceInput.includes('హలో')) {
           // If authentication is successful, speak greeting message
           speak("హలో బాలు, శుభ సాయం బాలు. నా పేరు ఫ్రైడే, మీ వ్యక్తిగత సహాయకుడు. నేను మీకు ఏమి చేయగలను, తినావా బాలు?");
         } else {
           // If authentication fails, display an error message
-          greetingMessage.textContent = "ధ్వని ధ్వారా ధ్వనితా చేయడం విఫలమయింది. దయచేసి మళ్లీ ప్రయత్నించండి.";
+          greetingMessage.textContent = "ధ్వని గుర్తింపులున్నాయి. దయచేసి మళ్లీ ప్రయత్నించండి.";
         }
       };
 
@@ -65,6 +65,8 @@
     // Function to speak text
     const speak = (text) => {
       const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'te-IN'; // Set language to Telugu (India)
+      utterance.voice = speechSynthesis.getVoices().find(voice => voice.lang === 'te-IN' && voice.name.includes('female')); // Find a Telugu female voice
       utterance.rate = 1; // Adjust the speaking rate if needed
       utterance.pitch = 1; // Adjust the speaking pitch if needed
       window.speechSynthesis.speak(utterance);
