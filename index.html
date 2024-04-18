@@ -3,18 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Face Authentication</title>
+  <title>Voice Authentication</title>
   <style>
-    #container {
-      position: relative;
-    }
-
-    #video, #canvas {
-      position: absolute;
-      top: 0;
-      left: 0;
-    }
-
     #greetingMessage {
       font-size: 24px;
       margin-top: 10px;
@@ -23,34 +13,42 @@
 </head>
 <body>
   <div id="container">
-    <video id="video" width="640" height="480" autoplay></video>
-    <canvas id="canvas" width="640" height="480"></canvas>
     <button id="startButton">Start Authentication</button>
     <div id="greetingMessage"></div>
   </div>
 
   <script>
-    const video = document.getElementById('video');
-    const canvas = document.getElementById('canvas');
     const startButton = document.getElementById('startButton');
     const greetingMessage = document.getElementById('greetingMessage');
+    let recognition;
 
-    // Function to start face authentication
+    // Function to start voice authentication
     const startAuthentication = () => {
-      // Access the user's webcam
-      navigator.mediaDevices.getUserMedia({ video: {} })
-        .then((stream) => {
-          video.srcObject = stream;
-        })
-        .catch((error) => {
-          console.error('Error accessing webcam:', error);
-        });
+      recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition || window.mozSpeechRecognition || window.msSpeechRecognition)();
+      recognition.lang = 'en-US';
 
-      // Implement face detection and recognition logic here
-      // You can use libraries like Face API.js or a custom ML model
+      // Start listening for user's voice input
+      recognition.start();
 
-      // Once authentication is successful, display greeting message
-      greetingMessage.textContent = 'Hello, good evening sir. My name is Friday, your personal assistant. What can I do for you, sir?';
+      // When user stops speaking, process the input
+      recognition.onresult = (event) => {
+        const voiceInput = event.results[0][0].transcript;
+        
+        // Compare voice input with authorized users' voices
+        if (voiceInput === 'your_voice_phrase') { // Replace 'your_voice_phrase' with an authorized phrase
+          // If authentication is successful, display greeting message
+          greetingMessage.textContent = 'Hello, good evening sir. My name is Friday, your personal assistant. What can I do for you, sir?';
+        } else {
+          // If authentication fails, display an error message
+          greetingMessage.textContent = 'Authentication failed. Please try again.';
+        }
+      };
+
+      // Handle errors
+      recognition.onerror = (event) => {
+        console.error('Error occurred during voice recognition:', event.error);
+        greetingMessage.textContent = 'Error occurred during voice recognition. Please try again.';
+      };
     }
 
     startButton.addEventListener('click', startAuthentication);
