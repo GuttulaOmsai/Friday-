@@ -47,8 +47,8 @@
         
         // Compare voice input with authorized phrase
         if (voiceInput.includes('hello')) {
-          // If authentication is successful, display greeting message
-          greetingMessage.textContent = "Hello, good evening sir. My name is Friday, your personal assistant. What can I do for you, sir?";
+          // If authentication is successful, speak greeting message
+          speak("Hello balu,  good evening balu. My name is Friday, your personal assistant. What can I do for you, tinava balu");
         } else {
           // If authentication fails, display an error message
           greetingMessage.textContent = "Voice authentication failed. Please try again.";
@@ -60,6 +60,15 @@
         console.error('Error occurred during voice recognition:', event.error);
         greetingMessage.textContent = 'Error occurred during voice recognition. Please try again.';
       };
+    }
+
+    // Function to speak text
+    const speak = (text) => {
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = 1; // Adjust the speaking rate if needed
+      utterance.pitch = 1; // Adjust the speaking pitch if needed
+      window.speechSynthesis.speak(utterance);
+      greetingMessage.textContent = ""; // Clear the text content while speaking
     }
 
     startButton.addEventListener('click', startAuthentication);
