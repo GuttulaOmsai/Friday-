@@ -24,7 +24,7 @@
 </head>
 <body>
   <div id="container">
-    <button id="startButton">ప్రారంభించు ధ్వని ధ్వారా ధ్వనితా</button>
+    <button id="startButton">Click and Say Hello</button>
     <div id="greetingMessage"></div>
   </div>
 
@@ -48,7 +48,9 @@
         // Compare voice input with authorized phrase
         if (voiceInput.includes('హలో')) {
           // If authentication is successful, speak greeting message
-          speak("హలో బాలు, శుభ సాయం బాలు. నా పేరు ఫ్రైడే, మీ వ్యక్తిగత సహాయకుడు. నేను మీకు ఏమి చేయగలను, తినావా బాలు?");
+          speak(" హలో బాలు నా పేరు ప్రియా నీకు ఏ విధంగా సహాయం చేయగలను భోజనం చేసావా బాలు
+
+   ?");
         } else {
           // If authentication fails, display an error message
           greetingMessage.textContent = "ధ్వని గుర్తింపులున్నాయి. దయచేసి మళ్లీ ప్రయత్నించండి.";
