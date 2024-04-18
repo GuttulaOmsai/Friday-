@@ -5,9 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Voice Authentication</title>
   <style>
+    #container {
+      text-align: center;
+      margin-top: 100px;
+    }
+
+    #startButton {
+      font-size: 18px;
+      padding: 10px 20px;
+      cursor: pointer;
+    }
+
     #greetingMessage {
       font-size: 24px;
-      margin-top: 10px;
+      margin-top: 20px;
     }
   </style>
 </head>
@@ -32,15 +43,15 @@
 
       // When user stops speaking, process the input
       recognition.onresult = (event) => {
-        const voiceInput = event.results[0][0].transcript;
+        const voiceInput = event.results[0][0].transcript.toLowerCase(); // Convert input to lowercase for case-insensitive comparison
         
-        // Compare voice input with authorized users' voices
-        if (voiceInput === 'your_voice_phrase') { // Replace 'your_voice_phrase' with an authorized phrase
+        // Compare voice input with authorized phrase
+        if (voiceInput.includes('hello')) {
           // If authentication is successful, display greeting message
-          greetingMessage.textContent = 'Hello, good evening sir. My name is Friday, your personal assistant. What can I do for you, sir?';
+          greetingMessage.textContent = "Hello, good evening sir. My name is Friday, your personal assistant. What can I do for you, sir?";
         } else {
           // If authentication fails, display an error message
-          greetingMessage.textContent = 'Authentication failed. Please try again.';
+          greetingMessage.textContent = "Voice authentication failed. Please try again.";
         }
       };
 
