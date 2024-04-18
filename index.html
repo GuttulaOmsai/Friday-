@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Telugu Speaking Assistant</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 50px auto;
+      text-align: center;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Telugu Speaking Assistant</h1>
+    <button id="startButton">Start Listening</button>
+    <p id="output"></p>
+  </div>
+
+  <script>
+    const recognition = new webkitSpeechRecognition(); // Initialize speech recognition
+    recognition.lang = "te-IN"; // Set language to Telugu (India)
+
+    document.getElementById("startButton").onclick = function() {
+      recognition.start(); // Start speech recognition when button is clicked
+    };
+
+    recognition.onresult = function(event) {
+      const result = event.results[0][0].transcript; // Get the recognized speech
+      document.getElementById("output").innerText = "You said: " + result; // Display the recognized speech
+
+      // Check if recognized speech matches a command
+      if (result.includes("నీ పేరు ఏమిటి")) {
+        speak("నా పేరు ఫ్రైడే, బాస్");
+      }
+    };
+
+    function speak(text) {
+      const utterance = new SpeechSynthesisUtterance(text); // Initialize speech synthesis
+      utterance.lang = "te-IN"; // Set language to Telugu (India)
+      window.speechSynthesis.speak(utterance); // Speak the provided text
+    }
+  </script>
+</body>
+</html>
