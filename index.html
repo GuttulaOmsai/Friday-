@@ -1,3 +1,6 @@
+ChatGPT 3.5
+
+User
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,7 +27,7 @@
 </head>
 <body>
   <div id="container">
-    <button id="startButton">click say hello</button>
+    <button id="startButton">Start Authentication</button>
     <div id="greetingMessage"></div>
   </div>
 
@@ -36,7 +39,7 @@
     // Function to start voice authentication
     const startAuthentication = () => {
       recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition || window.mozSpeechRecognition || window.msSpeechRecognition)();
-      recognition.lang = 'te-IN'; // Set language to Telugu (India)
+      recognition.lang = 'en-US';
 
       // Start listening for user's voice input
       recognition.start();
@@ -46,27 +49,25 @@
         const voiceInput = event.results[0][0].transcript.toLowerCase(); // Convert input to lowercase for case-insensitive comparison
         
         // Compare voice input with authorized phrase
-        if (voiceInput.includes('హలో')) {
+        if (voiceInput.includes('hello')) {
           // If authentication is successful, speak greeting message
-          speak("హలో బాలు, నా పేరు ప్రియా. నీకు ఏ విధంగా సహాయం చేయగలను? భోజనం చేసావా బాలు?");
+          speak("Hello balu,  good evening balu. My name is Friday, your personal assistant. What can I do for you, tinava balu");
         } else {
           // If authentication fails, display an error message
-          greetingMessage.textContent = "ధ్వని గుర్తింపులున్నాయి. దయచేసి మళ్లీ ప్రయత్నించండి.";
+          greetingMessage.textContent = "Voice authentication failed. Please try again.";
         }
       };
 
       // Handle errors
       recognition.onerror = (event) => {
-        console.error('ధ్వని గుర్తింపులున్నాయి అయినప్పటికీ దోషం:', event.error);
-        greetingMessage.textContent = 'ధ్వని గుర్తింపులున్నాయి అయినప్పటికీ దోషం. దయచేసి మళ్లీ ప్రయత్నించండి.';
+        console.error('Error occurred during voice recognition:', event.error);
+        greetingMessage.textContent = 'Error occurred during voice recognition. Please try again.';
       };
     }
 
     // Function to speak text
     const speak = (text) => {
       const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'te-IN'; // Set language to Telugu (India)
-      utterance.voice = speechSynthesis.getVoices().find(voice => voice.lang === 'te-IN' && voice.name.includes('female')); // Find a Telugu female voice
       utterance.rate = 1; // Adjust the speaking rate if needed
       utterance.pitch = 1; // Adjust the speaking pitch if needed
       window.speechSynthesis.speak(utterance);
